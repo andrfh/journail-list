@@ -1,0 +1,5 @@
+.app {
+  display: grid;
+  grid-template-columns: 28% 72%;
+  padding: 30px;
+}
