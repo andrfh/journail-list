@@ -5,28 +5,25 @@ import LeftPanel from './layouts/LeftPanel/LeftPanel';
 import JournailList from './components/JournailList/JournailList';
 import JournailAddButton from './components/JournailAddButton/JournailAddButton';
 import JournailForm from './components/JournailForm/JournailForm';
-import { useState } from 'react';
-
-const INITIAL_DATA = [
-	// {
-	// 	title: 'Подготовка к обновлению курсов',
-	// 	text: 'Сегодня провёл весь день за',
-	// 	date: new Date(),
-	// 	id: 0
-	// }
-
-	// {
-	// 	title: 'Поход в годы',
-	// 	text: 'Думал, что очень много време...',
-	// 	date: new Date()
-	// }
-];
+import { useEffect, useState } from 'react';
 
 
 function App() {
 	
-	const [items, setItems] = useState(INITIAL_DATA);
+	const [items, setItems] = useState([]);
 
+	useEffect(() => {
+		const data = JSON.parse(localStorage.getItem('data'));
+		if (data) {
+			setItems(data.map(item => ({
+				...item,
+				date: new Date(item.date)
+			})));
+		}
+	
+	}, [])
+
+	
 	const addItem = item => {
 		setItems(oldItems => [...oldItems, {
 			text: item.text,

@@ -21,7 +21,7 @@ const JournailList = ({ items }) => {
 	return <>{items.sort(sortItems).map(el => (
 		<CardButton key={el.id}> 
 			<JournailItem title={el.title} text={el.text} date={el.date}/>
-			<p>{el.id}</p>
+			{/* <p>{el.id}</p> */}
 		</CardButton>
 	))}</>;
 
