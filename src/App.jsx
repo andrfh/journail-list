@@ -23,6 +23,13 @@ function App() {
 	
 	}, [])
 
+	useEffect(() => {
+		if(items.length) {
+			localStorage.setItem('data', JSON.stringify(items))
+		}
+		console.log(items)
+	}, [items])
+
 	
 	const addItem = item => {
 		setItems(oldItems => [...oldItems, {

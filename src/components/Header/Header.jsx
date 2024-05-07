@@ -1,8 +1,9 @@
-import './Header.css';
+import styles from'./Header.module.css';
+import logoImg from '../../assets/logo.svg';
 
 const Header = () => {
 	return ( 
-		<img className='logo' src="/logo.svg" alt="logo" />
+		<img className={styles.logo} src={logoImg} alt="logo" />
 	);
 };
  

@@ -1,0 +1,89 @@
+.journail-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.hr {
+    width: 100%;
+    height: 1px;
+    background: #FFFFFF1A;
+    margin: 0;
+}
+
+.input {
+    border: 1px solid #181818;
+    background-color: #181818;
+    width: 100%;
+    
+}
+
+.input:hover {
+    border: 1px solid #181818;
+    background-color: #202020;
+    
+}
+
+.input-header {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 40px;
+    letter-spacing: 0em;
+    text-align: left;
+
+    border: 1px solid #181818;
+    background-color: #181818;
+}
+
+.input-header:hover {
+    border: 1px solid #101010;
+    background-color: #202020;
+    
+}
+
+.input-textarea {
+    border: 1px solid #181818;
+    background-color: #181818;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    height: 420px;
+    font-size: 16px;
+    font-weight: 400;
+
+}
+
+.input-textarea:hover {
+    border: 1px solid #101010;
+    background-color: #202020;
+}
+
+.invalid {
+    border: 1px solid red;
+    background: rgb(113, 13, 13);
+}
+
+.delete {
+    width: 30px;
+    height: 30px;
+    text-decoration: none;
+}
+
+.journail-form-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.input-line {
+    display: flex;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.date, .tag {
+    margin-right: 20px;
+}
+
+.input-text {
+    width: 100px;
+    margin-right: 8px;
+}
