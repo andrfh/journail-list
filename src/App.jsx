@@ -6,37 +6,30 @@ import JournailList from './components/JournailList/JournailList';
 import JournailAddButton from './components/JournailAddButton/JournailAddButton';
 import JournailForm from './components/JournailForm/JournailForm';
 import { useEffect, useState } from 'react';
+import { useLocalStroage } from './hooks/use-localstorage.hook'
 
+
+function mapItems(items) {
+	if (!items) {
+		return [];
+	}
+
+	return items.map(i => ({
+		...i,
+		date: new Date(i.date),
+	}));
+}
 
 function App() {
 	
-	const [items, setItems] = useState([]);
-
-	useEffect(() => {
-		const data = JSON.parse(localStorage.getItem('data'));
-		if (data) {
-			setItems(data.map(item => ({
-				...item,
-				date: new Date(item.date)
-			})));
-		}
-	
-	}, [])
-
-	useEffect(() => {
-		if(items.length) {
-			localStorage.setItem('data', JSON.stringify(items))
-		}
-		console.log(items)
-	}, [items])
-
+	const [items, setItems] = useLocalStroage('data');
 	
 	const addItem = item => {
-		setItems(oldItems => [...oldItems, {
-			text: item.text,
+		setItems([...mapItems(items), {
+			post: item.post,
 			title: item.title,
 			date: new Date(item.date),
-			id: oldItems.length > 0 ? Math.max(...oldItems.map(i => i.id)) + 1 : 1
+			id: items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1
 		}]);
 	};
 
@@ -46,7 +39,7 @@ function App() {
 			<LeftPanel> 
 				<Header />
 				<JournailAddButton />
-				<JournailList items={items} />
+				<JournailList items={mapItems(items)} />
 			</LeftPanel>
 			<Body>
 				<JournailForm onSubmit={addItem}/>

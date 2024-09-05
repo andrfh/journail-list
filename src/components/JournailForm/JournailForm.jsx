@@ -1,55 +1,49 @@
 import styles from'./JournailForm.module.css';
 import Button from '../Button/Button';
-import { useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import cn from 'classnames';
 import deleteImg from '../../assets/delete.svg';
 import dateImg from '../../assets/date.svg';
 import tagImg from '../../assets/tag.svg';
+import { INITIAL_STATE, formReducer } from './JournailForm.state.js';
 
 
 const JournailForm = ( {onSubmit} ) => {
 
-	const [formValidState, setFormValidState] = useState({
-		title: true,
-		post: true,
-		date: true
-	});
+	const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
+	const { isValid, isFormReadyToSubmit, values } = formState;
+
+	useEffect(() => {
+		let timerId;
+		if (!isValid.date || !isValid.post || !isValid.title) {
+			timerId = setTimeout(() => {
+				dispatchForm({ type: 'RESET_VALIDITY' })
+			}, 2000)
+		}
+
+		return () => {
+			clearTimeout(timerId);
+		};
+	}, [isValid])
+
+	useEffect(() => {
+		if (isFormReadyToSubmit == true) {
+			onSubmit(values);
+		}
+	}, [isFormReadyToSubmit])
 
 	const addJournailItem = (event) => {
 		event.preventDefault();
 		const formData = new FormData(event.target);
 		const formProps = Object.fromEntries(formData);
-		let isFormValid = true;
-		if (!formProps.title?.trim().length) {
-			setFormValidState(state => ({...state, title: false}));
-			isFormValid = false;
-		} else {
-			setFormValidState(state => ({...state, title: true}));
-		}
-		if (!formProps.post?.trim().length) {
-			setFormValidState(state => ({...state, post: false}));
-			isFormValid = false;
-		} else {
-			setFormValidState(state => ({...state, post: true}));
-		}
-		if (!formProps.date) {
-			setFormValidState(state => ({...state, date: false}));
-			isFormValid = false;
-		} else {
-			setFormValidState(state => ({...state, date: true}));
-		}
-		if (!isFormValid) {
-			return;
-		}
-		onSubmit(formProps);
-
+		dispatchForm({ type: 'SUBMIT', payload: formProps})
 	};
     
 	return ( 
 		<form className={styles['journail-form']} onSubmit={addJournailItem}>
 			<div className={styles['journail-form-header']}>
 				<input type="text" name='title' className={cn(styles['input-header'], {
-					[styles['invalid']] : !formValidState.title
+					[styles['invalid']] : !isValid.title
 				})} placeholder='Title'/>
 				<a href="#" className={styles['delete']}> <img src={deleteImg} alt="" /> </a>
 			</div>	
@@ -58,7 +52,7 @@ const JournailForm = ( {onSubmit} ) => {
 				<img src={dateImg} alt="date" className={styles.date} />
 				<p className={styles['input-text']}>Дата</p>
 				<input type="date" name='date' className={cn(styles['input'], {
-					[styles['invalid']] : !formValidState.date
+					[styles['invalid']] : !isValid.date
 				})}/>
 			</div>
 			<div className={styles.hr} />
@@ -72,7 +66,7 @@ const JournailForm = ( {onSubmit} ) => {
 			
 			
 			<textarea name="post" id="" cols="30" rows="10" className={cn(styles['input-textarea'], {
-				[styles['invalid']] : !formValidState.post
+				[styles['invalid']] : !isValid.post
 			})} placeholder='Текст' ></textarea>
 			<Button text="Сохранить" />
 		</form>
