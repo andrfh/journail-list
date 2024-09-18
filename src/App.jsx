@@ -6,7 +6,7 @@ import JournailList from './components/JournailList/JournailList';
 import JournailAddButton from './components/JournailAddButton/JournailAddButton';
 import JournailForm from './components/JournailForm/JournailForm';
 import { useEffect, useState } from 'react';
-import { useLocalStroage } from './hooks/use-localstorage.hook'
+import { useLocalStroage } from './hooks/use-localstorage.hook';
 
 
 function mapItems(items) {
@@ -16,7 +16,7 @@ function mapItems(items) {
 
 	return items.map(i => ({
 		...i,
-		date: new Date(i.date),
+		date: new Date(i.date)
 	}));
 }
 
@@ -32,6 +32,7 @@ function App() {
 			id: items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1
 		}]);
 	};
+
 
 
 	return (

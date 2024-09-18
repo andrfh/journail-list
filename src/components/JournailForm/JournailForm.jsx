@@ -1,6 +1,6 @@
 import styles from'./JournailForm.module.css';
 import Button from '../Button/Button';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import cn from 'classnames';
 import deleteImg from '../../assets/delete.svg';
 import dateImg from '../../assets/date.svg';
@@ -12,37 +12,58 @@ const JournailForm = ( {onSubmit} ) => {
 
 	const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
 	const { isValid, isFormReadyToSubmit, values } = formState;
+	const titleRef = useRef();
+	const dateRef = useRef();
+	const postRef = useRef();
+
+	const focusError = (isValid) => {
+		switch(true) {
+		case !isValid.title:
+			titleRef.current.focus();
+			break;
+		case !isValid.date:
+			dateRef.current.focus();
+			break;
+		case !isValid.post:
+			postRef.current.focus();
+			break;
+		}
+	};
 
 	useEffect(() => {
 		let timerId;
 		if (!isValid.date || !isValid.post || !isValid.title) {
+			focusError(isValid);
 			timerId = setTimeout(() => {
-				dispatchForm({ type: 'RESET_VALIDITY' })
-			}, 2000)
+				dispatchForm({ type: 'RESET_VALIDITY' });
+			}, 2000);
 		}
 
 		return () => {
 			clearTimeout(timerId);
 		};
-	}, [isValid])
+	}, [isValid]);
 
 	useEffect(() => {
-		if (isFormReadyToSubmit == true) {
+		if (isFormReadyToSubmit) {
 			onSubmit(values);
+			dispatchForm({ type: 'CLEAR'});
 		}
-	}, [isFormReadyToSubmit])
+	}, [isFormReadyToSubmit, onSubmit, values]);
+
+	const onChange = (e) => {
+		dispatchForm({ type: 'SET_VALUE', payload: { [e.target.name]: e.target.value}});
+	};
 
 	const addJournailItem = (event) => {
 		event.preventDefault();
-		const formData = new FormData(event.target);
-		const formProps = Object.fromEntries(formData);
-		dispatchForm({ type: 'SUBMIT', payload: formProps})
+		dispatchForm({ type: 'SUBMIT'});
 	};
     
 	return ( 
 		<form className={styles['journail-form']} onSubmit={addJournailItem}>
 			<div className={styles['journail-form-header']}>
-				<input type="text" name='title' className={cn(styles['input-header'], {
+				<input type="text" onChange={onChange} ref={titleRef} value={values.title} name='title' className={cn(styles['input-header'], {
 					[styles['invalid']] : !isValid.title
 				})} placeholder='Title'/>
 				<a href="#" className={styles['delete']}> <img src={deleteImg} alt="" /> </a>
@@ -51,7 +72,7 @@ const JournailForm = ( {onSubmit} ) => {
 			<div className={styles['input-line']}>
 				<img src={dateImg} alt="date" className={styles.date} />
 				<p className={styles['input-text']}>Дата</p>
-				<input type="date" name='date' className={cn(styles['input'], {
+				<input type="date" ref={dateRef} onChange={onChange} value={values.date} name='date' className={cn(styles['input'], {
 					[styles['invalid']] : !isValid.date
 				})}/>
 			</div>
@@ -59,13 +80,13 @@ const JournailForm = ( {onSubmit} ) => {
 			<div className={styles['input-line']}>
 				<img src={tagImg} alt="tag" className={styles.tag}/>
 				<p className={styles['input-text']}>Метки</p>
-				<input className={styles['input']} type="text" name='tag' placeholder='Метки'/>
+				<input className={styles['input']} onChange={onChange} type="text" value={values.tag} name='tag' placeholder='Метки'/>
 			</div>
 			<div className={styles.hr} />
 			
 			
 			
-			<textarea name="post" id="" cols="30" rows="10" className={cn(styles['input-textarea'], {
+			<textarea name="post" ref={postRef} onChange={onChange} value={values.post} id="" cols="30" rows="10" className={cn(styles['input-textarea'], {
 				[styles['invalid']] : !isValid.post
 			})} placeholder='Текст' ></textarea>
 			<Button text="Сохранить" />
