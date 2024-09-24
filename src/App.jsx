@@ -7,6 +7,8 @@ import JournailAddButton from './components/JournailAddButton/JournailAddButton'
 import JournailForm from './components/JournailForm/JournailForm';
 import { useEffect, useState } from 'react';
 import { useLocalStroage } from './hooks/use-localstorage.hook';
+import { UserContext } from './context/user.context';
+import { UserContextProvider } from './context/user.context';
 
 
 function mapItems(items) {
@@ -23,7 +25,7 @@ function mapItems(items) {
 function App() {
 	
 	const [items, setItems] = useLocalStroage('data');
-	
+
 	const addItem = item => {
 		setItems([...mapItems(items), {
 			post: item.post,
@@ -36,19 +38,19 @@ function App() {
 
 
 	return (
-		<div className='app'>
-			<LeftPanel> 
-				<Header />
-				<JournailAddButton />
-				<JournailList items={mapItems(items)} />
-			</LeftPanel>
-			<Body>
-				<JournailForm onSubmit={addItem}/>
-				
-			</Body>
-			
-			
-		</div>
+		<UserContextProvider>
+			<div className='app'>
+				<LeftPanel> 
+					<Header />
+					<JournailAddButton />
+					<JournailList items={mapItems(items)} />
+				</LeftPanel>
+				<Body>
+					<JournailForm onSubmit={addItem}/>
+				</Body>				
+			</div>
+		</UserContextProvider>
+		
 	);
 }
 
