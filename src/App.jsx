@@ -23,6 +23,8 @@ function mapItems(items) {
 }
 
 function App() {
+
+	localStorage.setItem('data', JSON.stringify([{"post": "post 1", "title":"title 1", "date":"01/01/0000", "id":"1"}]))
 	
 	const [items, setItems] = useLocalStroage('data');
 
