@@ -7,17 +7,13 @@ import dateImg from '../../assets/date.svg';
 import tagImg from '../../assets/tag.svg';
 import { INITIAL_STATE, formReducer } from './JournailForm.state.js';
 import { UserContext } from '../../context/user.context.jsx';
+import TagInput from '../TagInput/TagInput.jsx';
 
-
-const JournailForm = ( {onSubmit} ) => {
-
-	const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
-	const { isValid, isFormReadyToSubmit, values } = formState;
+const JournailForm = ( {onSubmit, isValid, isFormReadyToSubmit, values, dispatchForm} ) => {
 	const titleRef = useRef();
 	const dateRef = useRef();
 	const postRef = useRef();
-	const { userId } = useContext(UserContext);
-
+	const tagRef = useRef()
 	const focusError = (isValid) => {
 		switch(true) {
 		case !isValid.title:
@@ -25,6 +21,10 @@ const JournailForm = ( {onSubmit} ) => {
 			break;
 		case !isValid.date:
 			dateRef.current.focus();
+			break;
+			
+		case !isValid.tags:
+			tagRef.current.focus();
 			break;
 		case !isValid.post:
 			postRef.current.focus();
@@ -34,7 +34,7 @@ const JournailForm = ( {onSubmit} ) => {
 
 	useEffect(() => {
 		let timerId;
-		if (!isValid.date || !isValid.post || !isValid.title) {
+		if (!isValid.date || !isValid.post || !isValid.tags || !isValid.title) {
 			focusError(isValid);
 			timerId = setTimeout(() => {
 				dispatchForm({ type: 'RESET_VALIDITY' });
@@ -63,38 +63,40 @@ const JournailForm = ( {onSubmit} ) => {
 	};
     
 	return ( 
-		
-				<form className={styles['journail-form']} onSubmit={addJournailItem}>
-					{userId}
-					<div className={styles['journail-form-header']}>
-						<input type="text" onChange={onChange} ref={titleRef} value={values.title} name='title' className={cn(styles['input-header'], {
-							[styles['invalid']] : !isValid.title
-						})} placeholder='Title'/>
-						<a href="#" className={styles['delete']}> <img src={deleteImg} alt="" /> </a>
-					</div>	
+		<form className={styles['journail-form']} onSubmit={addJournailItem}>
+			{/* {userId} */}
+			<div className={styles['journail-form-header']}>
+				<input type="text" onChange={onChange} ref={titleRef} value={values.title} name='title' className={cn(styles['input-header'], {
+					[styles['invalid']] : !isValid.title
+				})} placeholder='Title'/>
+			</div>	
 
-					<div className={styles['input-line']}>
-						<img src={dateImg} alt="date" className={styles.date} />
-						<p className={styles['input-text']}>Дата</p>
-						<input type="date" ref={dateRef} onChange={onChange} value={values.date} name='date' className={cn(styles['input'], {
-							[styles['invalid']] : !isValid.date
-						})}/>
-					</div>
-					<div className={styles.hr} />
-					<div className={styles['input-line']}>
-						<img src={tagImg} alt="tag" className={styles.tag}/>
-						<p className={styles['input-text']}>Метки</p>
-						<input className={styles['input']} onChange={onChange} type="text" value={values.tag} name='tag' placeholder='Метки'/>
-					</div>
-					<div className={styles.hr} />
-					
-					
-					
-					<textarea name="post" ref={postRef} onChange={onChange} value={values.post} id="" cols="30" rows="10" className={cn(styles['input-textarea'], {
-						[styles['invalid']] : !isValid.post
-					})} placeholder='Текст' ></textarea>
-					<Button text="Сохранить" />
-				</form>
+			<div className={styles['input-line']}>
+				<img src={dateImg} alt="date" className={styles.date} />
+				<p className={styles['input-text']}>Дата</p>
+				<input type="date" ref={dateRef} onChange={onChange} value={values.date} name='date' className={cn(styles['input'], {
+					[styles['invalid']] : !isValid.date
+				})}/>
+			</div>
+			<div className={styles.hr} />
+			<div className={styles['input-line']}>
+				<img src={tagImg} alt="tag" className={styles.tag}/>
+				<p className={styles['input-text']}>Метки</p>
+				<TagInput ref={tagRef} isValid={isValid.tags} dispatchForm={dispatchForm} values={values.tags}/>
+			</div>
+			
+			<div className={styles.hr} />
+			
+			
+			<textarea name="post" ref={postRef} onChange={onChange} value={values.post} id="" cols="30" rows="10" className={cn(styles['input-textarea'], {
+				[styles['invalid']] : !isValid.post
+			})} placeholder='Текст' ></textarea>
+			<div className={cn(styles["buttons-wrapper"])}>
+				<Button text="Сохранить" style='primary' type='submit'/>
+				<Button text="Очистить" style='clear' type='button' click={() => {dispatchForm({ type: 'CLEAR' });dispatchForm({ type: 'RESET_VALIDITY' })}}/>
+			</div>
+
+		</form>
 
 
 	);

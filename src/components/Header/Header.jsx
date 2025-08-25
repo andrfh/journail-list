@@ -6,7 +6,7 @@ const Header = () => {
 	return ( 
 		<>
 			<img className={styles.logo} src={logoImg} alt="logo" />
-			<SelectUser />
+			{/* <SelectUser /> */}
 		</>
 	);
 };

@@ -1,21 +1,19 @@
 .journail-item {
     border-radius: 3px;
-    background: rgba(255, 255, 255, 0.03);
     color: #FFF;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .journail-item__header {
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
-    line-height: 28px; /* 155.556% */
+    line-height: 28px;
 }
 
-.journail-item__body {
-    display: flex;
-    column-gap: 10px;
-}
 
 .journail-item__date {
     color: rgba(255, 255, 255, 0.40);
@@ -23,12 +21,34 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    text-align: left;
 }
 
 .journail-item__text {
     color: rgba(255, 255, 255, 0.60);
+    text-align: left;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    overflow: hidden;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 10px;
+}
+
+.journail-item__tags {
+    display: flex;
+    gap: 10px;
+    width: 380px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.journail-item__tags > span {
+    color: rgba(255, 255, 255, 0.80);
+    background-color: #171717;
+    border-radius: 20px;
+    padding: 5px 10px;
 }
