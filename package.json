@@ -1,7 +1,7 @@
 {
   "name": "journail-list",
   "private": true,
-  "homepage": ".",
+  "homepage": "https://github.com/journail-list/",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
